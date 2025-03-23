@@ -1,6 +1,6 @@
 function createTable() {
     const tableId = Math.random().toString(36).substr(2, 8); // Generate unique table ID
-    const tableUrl = `${window.location.origin}/pokerdex/game.html?table=${tableId}`;
+    const tableUrl = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;
 
     // Show table link
     document.getElementById("tableUrl").value = tableUrl;
@@ -17,7 +17,7 @@ function createTable() {
 function joinTable() {
     const tableId = prompt("Enter the table ID:");
     if (tableId) {
-        window.location.href = `${window.location.origin}/pokerdex/game.html?table=${tableId}`;
+        window.location.href = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;
     }
 }
 
