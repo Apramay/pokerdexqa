@@ -41,7 +41,7 @@ function displayCard(card) {
     const suit = card.suit.toLowerCase();
     const imageName = `${rank}_of_${suit}.png`;
 
-    return `<img src="https://apramay.github.io/pokerdex/cards/${imageName}" 
+    return `<img src="https://apramay.github.io/pokerdexqa/cards/${imageName}" 
             alt="${rank} of ${suit}" 
             onerror="this.onerror=null; this.src='./cards/default.png';">`;
 }
@@ -84,7 +84,7 @@ function updateUI(tableId) {
         if (index === (gameState.dealerIndex + 2) % gameState.players.length) blindIndicator = "BB ";
             let displayedHand = player.name === gameState.players[gameState.currentPlayerIndex].name
         ? displayHand(player.hand)
-            : `<div class="card"><img src="https://apramay.github.io/pokerdex/cards/back.jpg" 
+            : `<div class="card"><img src="https://apramay.github.io/pokerdexqa/cards/back.jpg" 
     alt="Card Back" style="width: 100px; height: auto;"></div>`;
         playerDiv.innerHTML = `
          
@@ -128,7 +128,7 @@ function updateActionHistory(actionText) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    const socket = new WebSocket("wss://pokerdex-server.onrender.com"); // Replace with your server address
+    const socket = new WebSocket("wss://pokerdexqa-server.onrender.com"); // Replace with your server address
     socket.onopen = () => {
         console.log(" ✅  Connected to WebSocket server");
     };
