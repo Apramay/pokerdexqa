@@ -127,15 +127,23 @@ function updateActionHistory(actionText) {
     }
 }
 
-let mockWalletBalance = 100_000_000; // 100M tokens for testing
+let mockWallet = {
+    publicKey: "MockPublicKey12345",
+    solBalance: 50,  // Mock SOL balance
+    tokenBalance: 0, // Mock Token balance
+};
 
-function connectMockWallet() {
-    console.log("🔗 Connected to Mock Wallet");
-    document.getElementById("wallet-balance").innerText = `Test Tokens: ${mockWalletBalance}`;
+// Simulated Phantom Wallet Connection
+async function connectMockWallet() {
+    console.log("🔗 Connected to Mock Phantom Wallet:", mockWallet.publicKey);
+    sessionStorage.setItem("playerWallet", mockWallet.publicKey);
+    document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance}`;
 }
 
-function getMockBalance() {
-    return mockWalletBalance;
+// Simulated Token Fetch
+async function fetchMockTokenBalance() {
+    console.log(`💰 Mock Token Balance: ${mockWallet.tokenBalance} tokens`);
+    document.getElementById("token-balance").innerText = `Mock Tokens: ${mockWallet.tokenBalance}`;
 }
 
 
@@ -146,12 +154,12 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     const addPlayerBtn = document.getElementById("add-player-btn");
 const playerNameInput = document.getElementById("player-name-input");
-const tokenAmountInput = document.getElementById("coin-amount-input"); // NEW: Get the coin input
+const solAmountInput = document.getElementById("sol-amount-input"); // Use SOL input instead of token input
 
-if (addPlayerBtn && playerNameInput && tokenAmountInput) {
+if (addPlayerBtn && playerNameInput && solAmountInput) {
     addPlayerBtn.onclick = function () {
         const playerName = playerNameInput.value.trim();
-        const selectedCoins = parseInt(tokenAmountInput.value); // Get coins from input
+        const selectedSol = parseFloat(solAmountInput.value); // Player chooses SOL amount
 
         // ✅ Get tableId from URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -164,31 +172,65 @@ if (addPlayerBtn && playerNameInput && tokenAmountInput) {
             return;
         }
 
-        if (!selectedCoins || selectedCoins <= 0) {
-            alert("⚠️ Please enter a valid number of coins!");
+        if (!selectedSol || selectedSol <= 0) {
+            alert("⚠️ Please enter a valid SOL amount!");
             return;
         }
 
-        const tokenAmount = selectedCoins * 1_000; // Convert coins to tokens
+        if (selectedSol > mockWallet.solBalance) {
+            alert("❌ Not enough mock SOL in wallet!");
+            return;
+        }
+
+        // Convert SOL to Tokens (100 Tokens per $1)
+        const tokenAmount = selectedSol * 100;
+
+        // Deduct SOL from mock wallet & add tokens
+        mockWallet.solBalance -= selectedSol;
+        mockWallet.tokenBalance += tokenAmount;
 
         // ✅ Send player name, tableId, and tokens to WebSocket server
         socket.send(JSON.stringify({ 
             type: "join", 
             name: playerName, 
-            tokens: tokenAmount,  // Now sending tokens as well
+            tokens: tokenAmount,  
             tableId: tableId 
         }));
 
         sessionStorage.setItem("playerName", playerName);
-        console.log(`✅ ${playerName} joined with ${tokenAmount} tokens.`);
+        console.log(`✅ ${playerName} converted ${selectedSol} SOL → ${tokenAmount} tokens and joined.`);
+
+        // Update UI balances
+        document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance}`;
+        document.getElementById("token-balance").innerText = `Mock Tokens: ${mockWallet.tokenBalance}`;
 
         // Clear input fields
         playerNameInput.value = "";
-        tokenAmountInput.value = "";
+        solAmountInput.value = "";
     };
 } else {
     console.error(" ❌  Player input elements not found!");
 }
+document.getElementById("cashout-btn").addEventListener("click", () => {
+    let tokensToCashOut = mockWallet.tokenBalance;
+    if (tokensToCashOut <= 0) {
+        alert("❌ No tokens left to cash out!");
+        return;
+    }
+
+    // Convert tokens to SOL (at 101 tokens per $1)
+    let solAmount = tokensToCashOut / 101;
+    let fee = tokensToCashOut / 100; // 1% fee
+
+    // Deduct tokens & add SOL (minus fee)
+    mockWallet.tokenBalance = 0;
+    mockWallet.solBalance += solAmount;
+    
+    console.log(`✅ Cashed out ${tokensToCashOut} tokens → ${solAmount} SOL (1% fee: ${fee} SOL).`);
+    document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance}`;
+    document.getElementById("token-balance").innerText = `Mock Tokens: 0`;
+});
+
 
     const messageDisplay = document.getElementById("message");
     function displayMessage(message) {
