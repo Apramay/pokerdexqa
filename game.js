@@ -145,26 +145,51 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(" ✅  Connected to WebSocket server");
     };
     const addPlayerBtn = document.getElementById("add-player-btn");
-    const playerNameInput = document.getElementById("player-name-input");
-    if (addPlayerBtn && playerNameInput) {
-        addPlayerBtn.onclick = function () {
-            const playerName = playerNameInput.value.trim();
-            //  ✅  Get tableId from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const tableId = urlParams.get('table');
-            console.log("✅ Extracted tableId:", tableId);
-            if (playerName) {
-                //  ✅  Send tableId on join
-                socket.send(JSON.stringify({ type: "join", name: playerName, tableId: tableId }));
-                sessionStorage.setItem("playerName", playerName);
-                playerNameInput.value = "";
-            } else {
-                console.warn(" ⚠️  No player name entered!");
-            }
-        };
-    } else {
-        console.error(" ❌  Player input elements not found!");
-    }
+const playerNameInput = document.getElementById("player-name-input");
+const tokenAmountInput = document.getElementById("coin-amount-input"); // NEW: Get the coin input
+
+if (addPlayerBtn && playerNameInput && tokenAmountInput) {
+    addPlayerBtn.onclick = function () {
+        const playerName = playerNameInput.value.trim();
+        const selectedCoins = parseInt(tokenAmountInput.value); // Get coins from input
+
+        // ✅ Get tableId from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const tableId = urlParams.get('table');
+        console.log("✅ Extracted tableId:", tableId);
+
+        // ⚠️ Validate inputs
+        if (!playerName) {
+            alert("⚠️ Please enter a valid player name!");
+            return;
+        }
+
+        if (!selectedCoins || selectedCoins <= 0) {
+            alert("⚠️ Please enter a valid number of coins!");
+            return;
+        }
+
+        const tokenAmount = selectedCoins * 1_000_000; // Convert coins to tokens
+
+        // ✅ Send player name, tableId, and tokens to WebSocket server
+        socket.send(JSON.stringify({ 
+            type: "join", 
+            name: playerName, 
+            tokens: tokenAmount,  // Now sending tokens as well
+            tableId: tableId 
+        }));
+
+        sessionStorage.setItem("playerName", playerName);
+        console.log(`✅ ${playerName} joined with ${tokenAmount} tokens.`);
+
+        // Clear input fields
+        playerNameInput.value = "";
+        tokenAmountInput.value = "";
+    };
+} else {
+    console.error(" ❌  Player input elements not found!");
+}
+
     const messageDisplay = document.getElementById("message");
     function displayMessage(message) {
         if (messageDisplay) {
