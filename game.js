@@ -243,26 +243,28 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
         return;
     }
 
-    let tokensToCashOut = player.tokens;  // Use in-game tokens
+    let tokensToCashOut = player.tokens;  // Use actual in-game token balance
     if (tokensToCashOut <= 0) {
         alert("❌ No tokens left to cash out!");
         return;
     }
 
-    // Convert tokens to SOL using corrected rate
-    let conversionRate = 100; // Adjusted for better conversion
-    let solAmount = tokensToCashOut / conversionRate;
-    let fee = (tokensToCashOut * 0.01) / conversionRate; // Ensure fee is deducted in SOL correctly
+    // 🔹 Corrected SOL conversion (100 tokens = 1 SOL)
+    let conversionRate = 100;  
+    let solAmount = tokensToCashOut / conversionRate;  
 
-    // Deduct tokens and update SOL balance
+    // 🔹 Corrected Fee Calculation: 1% of SOL amount
+    let fee = solAmount * 0.01;  
+
+    // 🔹 Ensure we properly refund the exact SOL amount
     mockWallet.tokenBalance = 0;
-    mockWallet.solBalance += (solAmount - fee);
+    mockWallet.solBalance = parseFloat(mockWallet.solBalance + solAmount - fee).toFixed(6);  
 
     console.log(`✅ Cashed out ${tokensToCashOut} tokens → ${(solAmount - fee).toFixed(6)} SOL (1% fee: ${fee.toFixed(6)} SOL).`);
-    document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance.toFixed(6)} SOL`;
+    document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance} SOL`;
     document.getElementById("token-balance").innerText = `Mock Tokens: 0`;
 
-    // Notify server about cash-out and player disconnection
+    // 🔹 Notify server about cash-out and player removal
     socket.send(JSON.stringify({
         type: "cashout",
         playerName: playerName,
@@ -278,8 +280,6 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
         window.location.href = "index.html";  // Redirect or refresh
     }, 1000);
 });
-
-
 
     const messageDisplay = document.getElementById("message");
     function displayMessage(message) {
