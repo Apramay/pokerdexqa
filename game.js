@@ -127,6 +127,18 @@ function updateActionHistory(actionText) {
     }
 }
 
+let mockWalletBalance = 100_000_000; // 100M tokens for testing
+
+function connectMockWallet() {
+    console.log("🔗 Connected to Mock Wallet");
+    document.getElementById("wallet-balance").innerText = `Test Tokens: ${mockWalletBalance}`;
+}
+
+function getMockBalance() {
+    return mockWalletBalance;
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const socket = new WebSocket("wss://pokerdexqa-server.onrender.com"); // Replace with your server address
     socket.onopen = () => {
