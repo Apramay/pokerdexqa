@@ -135,12 +135,18 @@ let mockWallet = {
 
 // Simulated Phantom Wallet Connection
 function connectMockWallet() {
-    console.log("🔗 Connected to Mock Phantom Wallet:", mockWallet.publicKey);
-    sessionStorage.setItem("playerWallet", mockWallet.publicKey);
-    sessionStorage.setItem("walletSolBalance", mockWallet.solBalance);
-    sessionStorage.setItem("walletTokenBalance", mockWallet.tokenBalance);
+    console.log("🔗 Connecting to Mock Phantom Wallet...");
 
-    updateMockWalletUI();
+    // Simulate a wallet connection popup
+    setTimeout(() => {
+        alert("🔗 Mock Phantom Wallet Connected!");
+        sessionStorage.setItem("playerWallet", mockWallet.publicKey);
+        sessionStorage.setItem("walletSolBalance", mockWallet.solBalance);
+        sessionStorage.setItem("walletTokenBalance", mockWallet.tokenBalance);
+
+        updateMockWalletUI();
+        console.log("✅ Connected to Mock Phantom Wallet:", mockWallet.publicKey);
+    }, 1000); // Simulate delay to feel like a real wallet connection
 }
 
 // Function to update UI display of mock wallet balances
@@ -148,6 +154,11 @@ function updateMockWalletUI() {
     document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance} SOL`;
     document.getElementById("token-balance").innerText = `Mock Tokens: ${mockWallet.tokenBalance}`;
 }
+
+// Automatically connect the mock wallet when the page loads
+document.addEventListener("DOMContentLoaded", function () {
+    connectMockWallet();
+});
 
 
 document.addEventListener("DOMContentLoaded", function () {
