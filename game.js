@@ -169,7 +169,7 @@ if (addPlayerBtn && playerNameInput && tokenAmountInput) {
             return;
         }
 
-        const tokenAmount = selectedCoins * 1_000_000; // Convert coins to tokens
+        const tokenAmount = selectedCoins * 1_000; // Convert coins to tokens
 
         // ✅ Send player name, tableId, and tokens to WebSocket server
         socket.send(JSON.stringify({ 
