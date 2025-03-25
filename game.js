@@ -238,11 +238,31 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
 
     // Deduct tokens & add SOL (minus fee)
     mockWallet.tokenBalance = 0;
-    mockWallet.solBalance += solAmount;
+    mockWallet.solBalance += solAmount - fee;
     
-    console.log(`✅ Cashed out ${tokensToCashOut} tokens → ${solAmount} SOL (1% fee: ${fee} SOL).`);
+    console.log(`✅ Cashed out ${tokensToCashOut} tokens → ${solAmount - fee} SOL (1% fee: ${fee} SOL).`);
     document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance}`;
     document.getElementById("token-balance").innerText = `Mock Tokens: 0`;
+
+    // Notify the server about cash-out and disconnection
+    const playerName = sessionStorage.getItem("playerName");
+    const urlParams = new URLSearchParams(window.location.search);
+    const tableId = urlParams.get('table');
+
+    socket.send(JSON.stringify({
+        type: "cashout",
+        playerName: playerName,
+        tableId: tableId
+    }));
+
+    // Remove player session data
+    sessionStorage.removeItem("playerName");
+
+    // Disconnect from WebSocket and reload the page
+    socket.close();
+    setTimeout(() => {
+        window.location.href = "index.html"; // Redirect or refresh the page
+    }, 1000);
 });
 
 
