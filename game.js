@@ -226,29 +226,43 @@ if (addPlayerBtn && playerNameInput && solAmountInput) {
     console.error(" ❌  Player input elements not found!");
 }
 document.getElementById("cashout-btn").addEventListener("click", () => {
-    let tokensToCashOut = mockWallet.tokenBalance;
+    const playerName = sessionStorage.getItem("playerName");
+    const urlParams = new URLSearchParams(window.location.search);
+    const tableId = urlParams.get('table');
+
+    // Ensure game state has the correct tokens for the player
+    let gameState = gameStates.get(tableId);
+    if (!gameState) {
+        alert("❌ Game state not found! Cannot cash out.");
+        return;
+    }
+
+    let player = gameState.players.find(p => p.name === playerName);
+    if (!player) {
+        alert("❌ Player not found in game state!");
+        return;
+    }
+
+    let tokensToCashOut = player.tokens;  // Use in-game tokens
     if (tokensToCashOut <= 0) {
         alert("❌ No tokens left to cash out!");
         return;
     }
 
-    // Convert tokens to SOL (at 101 tokens per $1)
-    let solAmount = tokensToCashOut / 101;
-    let fee = tokensToCashOut / 100; // 1% fee
+    // Convert tokens to SOL using corrected rate
+    let conversionRate = 100; // Adjusted for better conversion
+    let solAmount = tokensToCashOut / conversionRate;
+    let fee = (tokensToCashOut * 0.01) / conversionRate; // Ensure fee is deducted in SOL correctly
 
-    // Deduct tokens & add SOL (minus fee)
+    // Deduct tokens and update SOL balance
     mockWallet.tokenBalance = 0;
-    mockWallet.solBalance += solAmount - fee;
-    
-    console.log(`✅ Cashed out ${tokensToCashOut} tokens → ${solAmount - fee} SOL (1% fee: ${fee} SOL).`);
-    document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance}`;
+    mockWallet.solBalance += (solAmount - fee);
+
+    console.log(`✅ Cashed out ${tokensToCashOut} tokens → ${(solAmount - fee).toFixed(6)} SOL (1% fee: ${fee.toFixed(6)} SOL).`);
+    document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance.toFixed(6)} SOL`;
     document.getElementById("token-balance").innerText = `Mock Tokens: 0`;
 
-    // Notify the server about cash-out and disconnection
-    const playerName = sessionStorage.getItem("playerName");
-    const urlParams = new URLSearchParams(window.location.search);
-    const tableId = urlParams.get('table');
-
+    // Notify server about cash-out and player disconnection
     socket.send(JSON.stringify({
         type: "cashout",
         playerName: playerName,
@@ -258,12 +272,13 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
     // Remove player session data
     sessionStorage.removeItem("playerName");
 
-    // Disconnect from WebSocket and reload the page
+    // Disconnect from WebSocket and reload page
     socket.close();
     setTimeout(() => {
-        window.location.href = "index.html"; // Redirect or refresh the page
+        window.location.href = "index.html";  // Redirect or refresh
     }, 1000);
 });
+
 
 
     const messageDisplay = document.getElementById("message");
