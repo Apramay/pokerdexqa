@@ -129,20 +129,23 @@ function updateActionHistory(actionText) {
 
 let mockWallet = {
     publicKey: "MockPublicKey12345",
-    solBalance: 50,  // Mock SOL balance
-    tokenBalance: 0, // Mock Token balance
+    solBalance: 50,  // Mock SOL balance in dollars
+    tokenBalance: 0, // Mock in-game tokens
 };
 
 // Simulated Phantom Wallet Connection
-async function connectMockWallet() {
+function connectMockWallet() {
     console.log("🔗 Connected to Mock Phantom Wallet:", mockWallet.publicKey);
     sessionStorage.setItem("playerWallet", mockWallet.publicKey);
-    document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance}`;
+    sessionStorage.setItem("walletSolBalance", mockWallet.solBalance);
+    sessionStorage.setItem("walletTokenBalance", mockWallet.tokenBalance);
+
+    updateMockWalletUI();
 }
 
-// Simulated Token Fetch
-async function fetchMockTokenBalance() {
-    console.log(`💰 Mock Token Balance: ${mockWallet.tokenBalance} tokens`);
+// Function to update UI display of mock wallet balances
+function updateMockWalletUI() {
+    document.getElementById("wallet-balance").innerText = `Mock SOL Balance: ${mockWallet.solBalance} SOL`;
     document.getElementById("token-balance").innerText = `Mock Tokens: ${mockWallet.tokenBalance}`;
 }
 
