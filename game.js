@@ -1,6 +1,31 @@
 const suits = ["Hearts", "Diamonds", "Clubs", "Spades"];
 const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 const rankValues = { "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 11, "Q": 12, "K": 13, "A": 14 };
+// Function to get URL parameters
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Retrieve table ID from URL
+const tableId = getQueryParam("table");
+
+// Retrieve stored game settings
+const solToToken = sessionStorage.getItem(`${tableId}_solToToken`) || 100; // Default: 100 tokens per SOL
+const smallBlind = sessionStorage.getItem(`${tableId}_smallBlind`) || 10; // Default: 10 tokens
+const bigBlind = sessionStorage.getItem(`${tableId}_bigBlind`) || 20; // Default: 20 tokens
+
+console.log(`Table ID: ${tableId}`);
+console.log(`Sol to Token: ${solToToken}`);
+console.log(`Small Blind: ${smallBlind}`);
+console.log(`Big Blind: ${bigBlind}`);
+
+// Store settings in a game config object
+const gameSettings = {
+    solToToken: parseInt(solToToken),
+    smallBlind: parseInt(smallBlind),
+    bigBlind: parseInt(bigBlind),
+};
 
 function createDeck() {
     const deck = [];
@@ -197,7 +222,7 @@ if (addPlayerBtn && playerNameInput && solAmountInput) {
         }
 
         // Convert SOL to Tokens (100 Tokens per $1)
-        const tokenAmount = selectedSol * 100;
+const tokenAmount = solAmount * gameSettings.solToToken;
 
         // Deduct SOL from mock wallet & add tokens
         mockWallet.solBalance -= selectedSol;
