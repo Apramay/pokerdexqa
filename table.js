@@ -10,22 +10,18 @@ function createTable() {
     const tableId = Math.random().toString(36).substr(2, 8); // Generate unique table ID
     const tableUrl = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;
 
-    // Store game settings in sessionStorage
-    sessionStorage.setItem(`${tableId}_solToToken`, solToToken);
-    sessionStorage.setItem(`${tableId}_smallBlind`, smallBlind);
-    sessionStorage.setItem(`${tableId}_bigBlind`, bigBlind);
 
-    // Show table link
-    document.getElementById("tableUrl").value = tableUrl;
-    document.getElementById("tableLink").style.display = "block";
-
-    // Notify server to register this new table
-    fetch("/registerTable", {
+fetch("/registerTable", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind }),
-    }).catch(err => console.error("Error registering table:", err));
-}
+    })
+    .then(() => {
+        document.getElementById("tableUrl").value = tableUrl;
+        document.getElementById("tableLink").style.display = "block";
+    })
+    .catch(err => console.error("Error registering table:", err));
+}}
 
 function joinTable() {
     const tableId = prompt("Enter the table ID:");
