@@ -64,16 +64,15 @@ function loadTableSettings() {
 
                 // Store settings for game.js to use
                 sessionStorage.setItem("solToToken", data.solToToken);
-                sessionStorage.setItem("smallBlind", data.smallBlind);
-                sessionStorage.setItem("bigBlind", data.bigBlind);
+                sessionStorage.setItem("smallBlind", data.smallBlindAmount);  // Corrected field name
+                sessionStorage.setItem("bigBlind", data.bigBlindAmount);  // Corrected field name
 
                 console.log("Loaded table settings:", data);
+                // Optionally, you can also display these settings in the UI to check if they are correctly loaded
+                document.getElementById("solToTokenDisplay").innerText = data.solToToken;
+                document.getElementById("smallBlindDisplay").innerText = data.smallBlindAmount;
+                document.getElementById("bigBlindDisplay").innerText = data.bigBlindAmount;
             })
             .catch(err => console.error("Error fetching table settings:", err));
     }
-}
-
-// Call loadTableSettings when game.html is loaded
-if (window.location.pathname.includes("game.html")) {
-    loadTableSettings();
 }
