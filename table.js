@@ -21,7 +21,7 @@ fetch("/registerTable", {
         document.getElementById("tableLink").style.display = "block";
     })
     .catch(err => console.error("Error registering table:", err));
-}}
+}
 
 function joinTable() {
     const tableId = prompt("Enter the table ID:");
