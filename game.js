@@ -219,7 +219,7 @@ if (addPlayerBtn && playerNameInput && solAmountInput) {
         }
 
         // Convert SOL to Tokens (100 Tokens per $1)
-const tokenAmount = solAmount * gameSettings.solToToken;
+const tokenAmount = selectedSol * gameSettings.solToToken;
 
         // Deduct SOL from mock wallet & add tokens
         mockWallet.solBalance -= selectedSol;
