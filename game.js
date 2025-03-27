@@ -8,8 +8,6 @@ function getQueryParam(param) {
 }
 
 // Retrieve table ID from URL
-const tableId = getQueryParam("table");
-
 // Retrieve stored game settings
 const solToToken = sessionStorage.getItem(`${tableId}_solToToken`) || 100; // Default: 100 tokens per SOL
 const smallBlind = sessionStorage.getItem(`${tableId}_smallBlind`) || 10; // Default: 10 tokens
