@@ -214,14 +214,6 @@ const maxBuyIn = tableSettings.gameType === "limit"
             alert("⚠️ Please enter a valid player name!");
             return;
         }
-        if (selectedSol < minBuyIn) {
-        alert(`❌ Minimum buy-in is ${minBuyIn} SOL (10x Big Blind)`);
-        return;
-    }
-    if (tableSettings.gameType === "limit" && selectedSol > maxBuyIn) {
-        alert(`❌ Maximum buy-in is ${maxBuyIn} SOL (100x Big Blind for Limit games)`);
-        return;
-    }
 
         if (!selectedSol || selectedSol <= 0) {
             alert("⚠️ Please enter a valid SOL amount!");
@@ -235,10 +227,19 @@ const maxBuyIn = tableSettings.gameType === "limit"
 
         // Convert SOL to Tokens (100 Tokens per $1)
 const tokenAmount = selectedSol * gameSettings.solToToken;
+        
 
         // Deduct SOL from mock wallet & add tokens
         mockWallet.solBalance -= selectedSol;
         mockWallet.tokenBalance += tokenAmount;
+         if (tokenAmount < minBuyIn) {
+        alert(`❌ Minimum buy-in is ${minBuyIn} tokens (10x Big Blind)`);
+        return;
+    }
+    if (tableSettings.gameType === "limit" && tokenAmount > maxBuyIn) {
+        alert(`❌ Maximum buy-in is ${maxBuyIn} token (100x Big Blind for Limit games)`);
+        return;
+    }
 
         // ✅ Send player name, tableId, and tokens to WebSocket server
         socket.send(JSON.stringify({ 
