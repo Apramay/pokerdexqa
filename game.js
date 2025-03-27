@@ -9,10 +9,9 @@ function getQueryParam(param) {
 
 // Retrieve table ID from URL
 // Retrieve stored game settings
-const solToToken = sessionStorage.getItem(`${tableId}_solToToken`) || 100; // Default: 100 tokens per SOL
-const smallBlind = sessionStorage.getItem(`${tableId}_smallBlind`) || 10; // Default: 10 tokens
-const bigBlind = sessionStorage.getItem(`${tableId}_bigBlind`) || 20; // Default: 20 tokens
-
+const solToToken = sessionStorage.getItem(`${tableId}_solToToken`) 
+const smallBlind = sessionStorage.getItem(`${tableId}_smallBlind`) 
+const bigBlind = sessionStorage.getItem(`${tableId}_bigBlind`)
 console.log(`Table ID: ${tableId}`);
 console.log(`Sol to Token: ${solToToken}`);
 console.log(`Small Blind: ${smallBlind}`);
