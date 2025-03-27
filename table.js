@@ -4,39 +4,35 @@ function showGameSetup() {
 
 function createTable() {
     // Get user-defined settings
-    const solToToken = parseInt(document.getElementById("solToToken").value) || 100; // Default: 100 tokens per SOL
-    const smallBlind = parseInt(document.getElementById("smallBlind").value) || 10;  // Default: 10 tokens
-    const bigBlind = parseInt(document.getElementById("bigBlind").value) || 20;      // Default: 20 tokens
+    const solToToken = parseInt(document.getElementById("solToToken").value) || 100;
+    const smallBlind = parseInt(document.getElementById("smallBlind").value) || 10;
+    const bigBlind = parseInt(document.getElementById("bigBlind").value) || 20;
 
     // Generate a unique table ID
     const tableId = Math.random().toString(36).substr(2, 8);
-    const tableUrl = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;
+    
+    // Store settings in localStorage with tableId as key
+    localStorage.setItem(`table_${tableId}_settings`, JSON.stringify({
+        solToToken,
+        smallBlind,
+        bigBlind
+    }));
 
     // Call backend to register the table
-   fetch("https://pokerdexqa-server.onrender.com/registerTable", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind }),
-})
-.then(response => response.json())
-.then(data => {
-    if (data.message === "Table registered successfully!") {
-        console.log("Table registered:", tableId);
-
-        // Store settings in sessionStorage with tableId as prefix
-        sessionStorage.setItem(`${tableId}_solToToken`, solToToken);
-        sessionStorage.setItem(`${tableId}_smallBlind`, smallBlind);
-        sessionStorage.setItem(`${tableId}_bigBlind`, bigBlind);
-
-        // Show the generated table link
-        const tableUrl = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;
-        document.getElementById("tableUrl").value = tableUrl;
-        document.getElementById("tableLink").style.display = "block";
-    } else {
-        console.error("Failed to register table:", data.error);
-    }
-})
-.catch(err => console.error("Error registering table:", err));
+    fetch("https://pokerdexqa-server.onrender.com/registerTable", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === "Table registered successfully!") {
+            const tableUrl = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;
+            document.getElementById("tableUrl").value = tableUrl;
+            document.getElementById("tableLink").style.display = "block";
+        }
+    })
+    .catch(err => console.error("Error registering table:", err));
 }
 function joinTable() {
     const tableId = prompt("Enter the table ID:");
