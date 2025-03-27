@@ -75,12 +75,18 @@ function loadTableSettings() {
                 sessionStorage.setItem("solToToken", data.solToToken);
                 sessionStorage.setItem("smallBlind", data.smallBlindAmount);  // Corrected field name
                 sessionStorage.setItem("bigBlind", data.bigBlindAmount);  // Corrected field name
+                sessionStorage.setItem("gameType", data.gameType);
+                sessionStorage.setItem("minBuyIn", data.minBuyIn);
+                sessionStorage.setItem("maxBuyIn", data.maxBuyIn);
+                
 
                 console.log("Loaded table settings:", data);
                 // Optionally, you can also display these settings in the UI to check if they are correctly loaded
                 document.getElementById("solToTokenDisplay").innerText = data.solToToken;
                 document.getElementById("smallBlindDisplay").innerText = data.smallBlindAmount;
                 document.getElementById("bigBlindDisplay").innerText = data.bigBlindAmount;
+                document.getElementById("buyInDisplay").innerText = 
+                    `Buy-In Limits: ${data.gameType === "limit" ? data.minBuyIn + " SOL (min) to " + data.maxBuyIn + " SOL (max)" : "No limit"}`;
             })
             .catch(err => console.error("Error fetching table settings:", err));
     }
