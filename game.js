@@ -20,6 +20,13 @@ const gameSettings = {
 };
 
 console.log('Game settings loaded:', gameSettings);
+
+// Display game settings in the UI
+document.getElementById("small-blind-display").textContent = gameSettings.smallBlind;
+document.getElementById("big-blind-display").textContent = gameSettings.bigBlind;
+document.getElementById("sol-to-token-display").textContent = gameSettings.solToToken;
+document.getElementById("table-id").textContent = tableId;
+
 function createDeck() {
     const deck = [];
     for (const suit of suits) {
