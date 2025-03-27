@@ -6,24 +6,20 @@ function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
 }
-
-// Retrieve table ID from URL
-// Retrieve stored game settings
-const solToToken = sessionStorage.getItem(`${tableId}_solToToken`) 
-const smallBlind = sessionStorage.getItem(`${tableId}_smallBlind`) 
-const bigBlind = sessionStorage.getItem(`${tableId}_bigBlind`)
-console.log(`Table ID: ${tableId}`);
-console.log(`Sol to Token: ${solToToken}`);
-console.log(`Small Blind: ${smallBlind}`);
-console.log(`Big Blind: ${bigBlind}`);
+const tableSettings = JSON.parse(localStorage.getItem(`table_${tableId}_settings`)) || {
+    solToToken: 100,
+    smallBlind: 10,
+    bigBlind: 20
+};
 
 // Store settings in a game config object
 const gameSettings = {
-    solToToken: parseInt(solToToken),
-    smallBlind: parseInt(smallBlind),
-    bigBlind: parseInt(bigBlind),
+    solToToken: parseInt(tableSettings.solToToken),
+    smallBlind: parseInt(tableSettings.smallBlind),
+    bigBlind: parseInt(tableSettings.bigBlind),
 };
 
+console.log('Game settings loaded:', gameSettings);
 function createDeck() {
     const deck = [];
     for (const suit of suits) {
