@@ -7,6 +7,11 @@ function createTable() {
     const solToToken = parseInt(document.getElementById("solToToken").value) || 100;
     const smallBlind = parseInt(document.getElementById("smallBlind").value) || 10;
     const bigBlind = parseInt(document.getElementById("bigBlind").value) || 20;
+    const gameType = document.getElementById("gameType").value; // Get selected game type
+
+    // Calculate minimum and maximum buy-ins based on game type
+    const minBuyIn = bigBlind * 10; // Minimum buy-in is always 10x the big blind
+    let maxBuyIn = gameType === "limit" ? bigBlind * 100 : null; // Max buy-in for limit game, no limit for "No Limit"
 
     // Generate a unique table ID
     const tableId = Math.random().toString(36).substr(2, 8);
@@ -15,14 +20,17 @@ function createTable() {
     localStorage.setItem(`table_${tableId}_settings`, JSON.stringify({
         solToToken,
         smallBlind,
-        bigBlind
+        bigBlind,
+        gameType,  // Store the game type
+        minBuyIn,
+        maxBuyIn   // Store the max buy-in (if applicable)
     }));
 
     // Call backend to register the table
     fetch("https://pokerdexqa-server.onrender.com/registerTable", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind }),
+        body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind, gameType, minBuyIn, maxBuyIn }),
     })
     .then(response => response.json())
     .then(data => {
