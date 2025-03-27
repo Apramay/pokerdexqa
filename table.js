@@ -13,25 +13,30 @@ function createTable() {
     const tableUrl = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;
 
     // Call backend to register the table
-    fetch("https://pokerdexqa-server.onrender.com/registerTable", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === "Table registered successfully!") {
-            console.log("Table registered:", tableId);
-            
-            // Show the generated table link
-            document.getElementById("tableUrl").value = tableUrl;
-            document.getElementById("tableLink").style.display = "block";
-        } else {
-            console.error("Failed to register table:", data.error);
-        }
-    })
-    .catch(err => console.error("Error registering table:", err));
-}
+   fetch("https://pokerdexqa-server.onrender.com/registerTable", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind }),
+})
+.then(response => response.json())
+.then(data => {
+    if (data.message === "Table registered successfully!") {
+        console.log("Table registered:", tableId);
+
+        // Store settings in sessionStorage with tableId as prefix
+        sessionStorage.setItem(`${tableId}_solToToken`, solToToken);
+        sessionStorage.setItem(`${tableId}_smallBlind`, smallBlind);
+        sessionStorage.setItem(`${tableId}_bigBlind`, bigBlind);
+
+        // Show the generated table link
+        const tableUrl = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;
+        document.getElementById("tableUrl").value = tableUrl;
+        document.getElementById("tableLink").style.display = "block";
+    } else {
+        console.error("Failed to register table:", data.error);
+    }
+})
+.catch(err => console.error("Error registering table:", err));
 
 function joinTable() {
     const tableId = prompt("Enter the table ID:");
