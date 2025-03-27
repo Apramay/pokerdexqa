@@ -16,14 +16,14 @@ function createTable() {
     // Generate a unique table ID
     const tableId = Math.random().toString(36).substr(2, 8);
     
-    // Store settings in localStorage with tableId as key
+    // Store settings in localStorage with tableId as key (optional)
     localStorage.setItem(`table_${tableId}_settings`, JSON.stringify({
         solToToken,
         smallBlind,
         bigBlind,
-        gameType,  // Store the game type
+        gameType,
         minBuyIn,
-        maxBuyIn   // Store the max buy-in (if applicable)
+        maxBuyIn
     }));
 
     // Call backend to register the table
@@ -79,8 +79,8 @@ function loadTableSettings() {
                 sessionStorage.setItem("minBuyIn", data.minBuyIn);
                 sessionStorage.setItem("maxBuyIn", data.maxBuyIn);
                 
-
                 console.log("Loaded table settings:", data);
+
                 // Optionally, you can also display these settings in the UI to check if they are correctly loaded
                 document.getElementById("solToTokenDisplay").innerText = data.solToToken;
                 document.getElementById("smallBlindDisplay").innerText = data.smallBlindAmount;
