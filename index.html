@@ -24,7 +24,21 @@
 </head>
 <body>
     <h1>Welcome to Poker</h1>
-    <button onclick="createTable()">Start a New Table</button>
+<button onclick="showGameSetup()">Start a New Table</button>
+
+<div id="setupForm" style="display: none;">
+    <h3>Game Setup</h3>
+    <label>SOL to Token Conversion:</label>
+    <input type="number" id="solToToken" value="100"><br>
+
+    <label>Small Blind:</label>
+    <input type="number" id="smallBlind" value="10"><br>
+
+    <label>Big Blind:</label>
+    <input type="number" id="bigBlind" value="20"><br>
+
+    <button onclick="createTable()">Create Table</button>
+</div>
     
     <button onclick="joinTable()">Join a Live Table</button>
     
