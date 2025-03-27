@@ -182,6 +182,8 @@ function updateMockWalletUI() {
 
 // Automatically connect the mock wallet when the page loads
 document.addEventListener("DOMContentLoaded", function () {
+        loadTableSettings();  // Load table settings first
+
     connectMockWallet();
 });
 
