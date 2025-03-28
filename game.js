@@ -6,11 +6,6 @@ function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
 }
-const tableSettings = JSON.parse(localStorage.getItem(`table_${tableId}_settings`)) || {
-    solToToken: 100,
-    smallBlind: 10,
-    bigBlind: 20
-};
 
 // Store settings in a game config object
 const gameSettings = {
