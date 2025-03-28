@@ -10,7 +10,9 @@ function getQueryParam(param) {
 let gameSettings = { // Initialize gameSettings
     solToToken: 0,
     smallBlind: 0,
-    bigBlind: 0
+    bigBlind: 0,
+        gameType: "" // Initialize gameType
+
 };
 
 async function loadGameSettings() {
@@ -24,6 +26,8 @@ async function loadGameSettings() {
         gameSettings.solToToken = settings.solToToken;
         gameSettings.smallBlind = settings.smallBlindAmount;
         gameSettings.bigBlind = settings.bigBlindAmount;
+                gameSettings.gameType = settings.gameType; // Assuming 'gameType' is in the server response
+
 
         console.log('Game settings loaded from server:', gameSettings);
 
@@ -215,9 +219,9 @@ if (addPlayerBtn && playerNameInput && solAmountInput) {
     addPlayerBtn.onclick = function () {
         const playerName = playerNameInput.value.trim();
         const selectedSol = parseFloat(solAmountInput.value); // Player chooses SOL amount
-            const minBuyIn = tableSettings.bigBlind * 10;  // 10x Big Blind
-const maxBuyIn = tableSettings.gameType === "limit" 
-        ? tableSettings.bigBlind * 100  // 100x Big Blind for Limit
+            const minBuyIn = gameSettings.bigBlind * 10;  // 10x Big Blind
+const maxBuyIn = gameSettings.gameType === "limit" 
+        ? gameSettings.bigBlind * 100  // 100x Big Blind for Limit
         : Infinity;       
 
         // ✅ Get tableId from URL
@@ -252,7 +256,7 @@ const tokenAmount = selectedSol * gameSettings.solToToken;
         alert(`❌ Minimum buy-in is ${minBuyIn} tokens (10x Big Blind)`);
         return;
     }
-    if (tableSettings.gameType === "limit" && tokenAmount > maxBuyIn) {
+    if (gameSettings.gameType === "limit" && tokenAmount > maxBuyIn) {
         alert(`❌ Maximum buy-in is ${maxBuyIn} token (100x Big Blind for Limit games)`);
         return;
     }
