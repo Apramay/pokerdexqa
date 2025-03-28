@@ -28,7 +28,7 @@ const response = await fetch('https://pokerdexqa-server.onrender.com/registerTab
         }
 
         // Table created successfully, generate the game URL
-        const tableUrl = `<span class="math-inline">\{window\.location\.origin\}/game\.html?table\=</span>{tableId}`;
+        const tableUrl = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;;
         document.getElementById('tableUrl').value = tableUrl;
         document.getElementById('tableLink').style.display = 'block';
     } catch (error) {
