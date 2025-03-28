@@ -15,8 +15,8 @@ async function createTable() {
     let maxBuyIn = gameType === "limit" ? bigBlind * 100 : null; // Max buy-in for limit game, no limit for "No Limit"
 
     try {
-        const response = await fetch('/registerTable', { //  ✅  Send to server
-            method: 'POST',
+const response = await fetch('https://pokerdexqa-server.onrender.com/registerTable', {  //  ✅  Full backend URL
+    method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
