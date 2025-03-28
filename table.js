@@ -2,46 +2,41 @@ function showGameSetup() {
     document.getElementById("setupForm").style.display = "block";
 }
 
-function createTable() {
-    // Get user-defined settings
-    const solToToken = parseInt(document.getElementById("solToToken").value) || 100;
-    const smallBlind = parseInt(document.getElementById("smallBlind").value) || 10;
-    const bigBlind = parseInt(document.getElementById("bigBlind").value) || 20;
-    const gameType = document.getElementById("gameType").value; // Get selected game type
+async function createTable() {
+    const solToToken = document.getElementById('solToToken').value;
+    const smallBlind = document.getElementById('smallBlind').value;
+    const bigBlind = document.getElementById('bigBlind').value;
+    const gameType = document.getElementById('gameType').value;
 
-    // Calculate minimum and maximum buy-ins based on game type
+    // Generate a unique table ID (you might want to use a more robust method)
+    const tableId = 'table_' + Math.random().toString(36).substring(7);
+        // Calculate minimum and maximum buy-ins based on game type
     const minBuyIn = bigBlind * 10; // Minimum buy-in is always 10x the big blind
     let maxBuyIn = gameType === "limit" ? bigBlind * 100 : null; // Max buy-in for limit game, no limit for "No Limit"
 
-    // Generate a unique table ID
-    const tableId = Math.random().toString(36).substr(2, 8);
-    
-    // Store settings in localStorage with tableId as key (optional)
-    localStorage.setItem(`table_${tableId}_settings`, JSON.stringify({
-        solToToken,
-        smallBlind,
-        bigBlind,
-        gameType,
-        minBuyIn,
-        maxBuyIn
-    }));
+    try {
+        const response = await fetch('/registerTable', { //  ✅  Send to server
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind, gameType })
+        });
 
-    // Call backend to register the table
-    fetch("https://pokerdexqa-server.onrender.com/registerTable", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind, gameType, minBuyIn, maxBuyIn }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === "Table registered successfully!") {
-            const tableUrl = `${window.location.origin}/pokerdexqa/game.html?table=${tableId}`;
-            document.getElementById("tableUrl").value = tableUrl;
-            document.getElementById("tableLink").style.display = "block";
+        if (!response.ok) {
+            throw new Error('Failed to create table');
         }
-    })
-    .catch(err => console.error("Error registering table:", err));
+
+        // Table created successfully, generate the game URL
+        const tableUrl = `<span class="math-inline">\{window\.location\.origin\}/game\.html?table\=</span>{tableId}`;
+        document.getElementById('tableUrl').value = tableUrl;
+        document.getElementById('tableLink').style.display = 'block';
+    } catch (error) {
+        console.error('Error creating table:', error);
+        alert('Error creating table.');
+    }
 }
+
 function joinTable() {
     const tableId = prompt("Enter the table ID:");
     if (tableId) {
