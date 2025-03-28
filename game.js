@@ -215,7 +215,7 @@ if (addPlayerBtn && playerNameInput && solAmountInput) {
     addPlayerBtn.onclick = function () {
         const playerName = playerNameInput.value.trim();
         const selectedSol = parseFloat(solAmountInput.value); // Player chooses SOL amount
-            const minBuyIn = Settings.bigBlind * 10;  // 10x Big Blind
+            const minBuyIn = gameSettings.bigBlind * 10;  // 10x Big Blind
 const maxBuyIn = gameSettings.gameType === "limit" 
         ? gameSettings.bigBlind * 100  // 100x Big Blind for Limit
         : Infinity;       
