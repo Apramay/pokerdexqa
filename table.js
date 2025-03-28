@@ -9,7 +9,7 @@ async function createTable() {
     const gameType = document.getElementById('gameType').value;
 
     // Generate a unique table ID (you might want to use a more robust method)
-    const tableId = 'table_' + Math.random().toString(36).substring(7);
+    const tableId = Math.random().toString(36).substr(2, 8); // Generate unique table ID
         // Calculate minimum and maximum buy-ins based on game type
     const minBuyIn = bigBlind * 10; // Minimum buy-in is always 10x the big blind
     let maxBuyIn = gameType === "limit" ? bigBlind * 100 : null; // Max buy-in for limit game, no limit for "No Limit"
