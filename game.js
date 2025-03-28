@@ -7,20 +7,40 @@ function getQueryParam(param) {
     return urlParams.get(param);
 }
 
-// Store settings in a game config object
-const gameSettings = {
-    solToToken: parseInt(tableSettings.solToToken),
-    smallBlind: parseInt(tableSettings.smallBlind),
-    bigBlind: parseInt(tableSettings.bigBlind),
+let gameSettings = { // Initialize gameSettings
+    solToToken: 0,
+    smallBlind: 0,
+    bigBlind: 0
 };
 
-console.log('Game settings loaded:', gameSettings);
+async function loadGameSettings() {
+    try {
+        const response = await fetch(`https://pokerdexqa-server.onrender.com/getTableSettings?tableId=${tableId}`);
+        if (!response.ok) {
+            throw new Error('Failed to load table settings');
+        }
+        const settings = await response.json();
+        // Update the gameSettings object
+        gameSettings.solToToken = settings.solToToken;
+        gameSettings.smallBlind = settings.smallBlindAmount;
+        gameSettings.bigBlind = settings.bigBlindAmount;
 
-// Display game settings in the UI
-document.getElementById("small-blind-display").textContent = gameSettings.smallBlind;
-document.getElementById("big-blind-display").textContent = gameSettings.bigBlind;
-document.getElementById("sol-to-token-display").textContent = gameSettings.solToToken;
-document.getElementById("table-id").textContent = tableId;
+        console.log('Game settings loaded from server:', gameSettings);
+
+        // Display game settings in the UI
+        document.getElementById("small-blind-display").textContent = gameSettings.smallBlind;
+        document.getElementById("big-blind-display").textContent = gameSettings.bigBlind;
+        document.getElementById("sol-to-token-display").textContent = gameSettings.solToToken;
+        document.getElementById("table-id").textContent = tableId;
+
+    } catch (error) {
+        console.error('Error loading table settings:', error);
+        alert('Failed to load table settings. Returning to homepage.');
+        window.location.href = "/"; // Or handle the error as you see fit
+    }
+}
+
+loadGameSettings();
 
 function createDeck() {
     const deck = [];
