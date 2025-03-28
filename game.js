@@ -35,6 +35,8 @@ async function loadGameSettings() {
         document.getElementById("small-blind-display").textContent = gameSettings.smallBlind;
         document.getElementById("big-blind-display").textContent = gameSettings.bigBlind;
         document.getElementById("sol-to-token-display").textContent = gameSettings.solToToken;
+        document.getElementById('game-type').textContent = settings.gameType;
+
         document.getElementById("table-id").textContent = tableId;
 
     } catch (error) {
