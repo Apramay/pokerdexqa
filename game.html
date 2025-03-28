@@ -75,9 +75,39 @@
 
     // Store the table ID globally
     sessionStorage.setItem("tableId", tableId);
-               loadTableSettings();
-
+<script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const tableId = urlParams.get("table");
+            if (!tableId) {
+                alert("No table ID found! Returning to homepage.");
+                window.location.href = "/";
+            }
+            // Store the table ID globally
+            sessionStorage.setItem("tableId", tableId);
+            // Fetch table settings from the server
+            async function loadTableSettings() {
+                try {
+                    const response = await fetch(`/getTableSettings?tableId=${tableId}`);
+                    if (!response.ok) {
+                        throw new Error('Failed to load table settings');
+                    }
+                    const settings = await response.json();
+                    // Use the settings to update the game UI or state
+                    document.getElementById('small-blind-display').textContent = settings.smallBlindAmount;
+                    document.getElementById('big-blind-display').textContent = settings.bigBlindAmount;
+                    document.getElementById('sol-to-token-display').textContent = settings.solToToken;
+                    document.getElementById('table-id').textContent = tableId;
+                    // ... any other UI updates
+                } catch (error) {
+                    console.error('Error loading table settings:', error);
+                    alert('Failed to load table settings. Returning to homepage.');
+                    window.location.href = "/"; // Or handle the error as you see fit
+                }
+            }
+            loadTableSettings();
 </script>
+        
+        
     <script src="game.js"></script>
 </body>
 </html>
