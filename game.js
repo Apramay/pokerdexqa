@@ -195,9 +195,9 @@ if (addPlayerBtn && playerNameInput && solAmountInput) {
     addPlayerBtn.onclick = function () {
         const playerName = playerNameInput.value.trim();
         const selectedSol = parseFloat(solAmountInput.value); // Player chooses SOL amount
-            const minBuyIn = tableSettings.bigBlind * 10;  // 10x Big Blind
-const maxBuyIn = tableSettings.gameType === "limit" 
-        ? tableSettings.bigBlind * 100  // 100x Big Blind for Limit
+            const minBuyIn = Settings.bigBlind * 10;  // 10x Big Blind
+const maxBuyIn = gameSettings.gameType === "limit" 
+        ? gameSettings.bigBlind * 100  // 100x Big Blind for Limit
         : Infinity;       
 
         // ✅ Get tableId from URL
@@ -232,7 +232,7 @@ const tokenAmount = selectedSol * gameSettings.solToToken;
         alert(`❌ Minimum buy-in is ${minBuyIn} tokens (10x Big Blind)`);
         return;
     }
-    if (tableSettings.gameType === "limit" && tokenAmount > maxBuyIn) {
+    if (gameSettings.gameType === "limit" && tokenAmount > maxBuyIn) {
         alert(`❌ Maximum buy-in is ${maxBuyIn} token (100x Big Blind for Limit games)`);
         return;
     }
