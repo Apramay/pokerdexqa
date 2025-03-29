@@ -365,6 +365,14 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
             alert("⚠️ Please enter a valid number of tokens to add.");
             return;
         }
+        const solToToken = gameSettings.solToToken; //  ✅  Get the conversion rate
+        const solToAdd = tokensToAdd / solToToken;
+
+        //  ✅  Check if player has enough SOL
+        if (playerSolBalance < solToAdd) {
+            alert("❌ Not enough SOL in your mock wallet.");
+            return;
+        }
         if (!tableId) {
             console.error("❌ Table ID is not available.");
             return;
@@ -376,9 +384,16 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
             tokens: tokensToAdd,
             playerSolBalance: playerSolBalance //  ✅  Send SOL balance
         }));
+//  ✅  Update client-side mock wallet
+        mockWallet.solBalance -= solToAdd;
+        mockWallet.tokenBalance += tokensToAdd;
+        sessionStorage.setItem("walletSolBalance", mockWallet.solBalance.toString());
+        sessionStorage.setItem("walletTokenBalance", mockWallet.tokenBalance.toString());
+        updateMockWalletUI();  //  ✅  Update the UI
+
         addTokensInput.value = ""; // Clear the input
     });
-} else {
+}  else {
     console.error("❌ Add Tokens input or button not found!");
 }
     
