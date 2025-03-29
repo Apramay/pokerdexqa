@@ -356,10 +356,11 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
         }
     }
 
-    if (addTokensBtn && addTokensInput) {
+ if (addTokensBtn && addTokensInput) {
     addTokensBtn.addEventListener("click", () => {
         const playerName = sessionStorage.getItem("playerName");
         const tokensToAdd = parseInt(addTokensInput.value);
+        const playerSolBalance = parseFloat(sessionStorage.getItem("walletSolBalance")); //  ✅  Get SOL balance
         if (isNaN(tokensToAdd) || tokensToAdd <= 0) {
             alert("⚠️ Please enter a valid number of tokens to add.");
             return;
@@ -372,7 +373,8 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
             type: "addTokens",
             playerName: playerName,
             tableId: tableId,
-            tokens: tokensToAdd
+            tokens: tokensToAdd,
+            playerSolBalance: playerSolBalance //  ✅  Send SOL balance
         }));
         addTokensInput.value = ""; // Clear the input
     });
