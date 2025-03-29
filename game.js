@@ -103,6 +103,9 @@ const potDisplay = document.getElementById("pot");
 const roundDisplay = document.getElementById("round");
 const currentBetDisplay = document.getElementById("currentBet");
 const messageDisplay = document.getElementById("message");
+const addTokensInput = document.getElementById("add-tokens-input");
+const addTokensBtn = document.getElementById("add-tokens-btn");
+
 
 //  ✅  Table-specific game states
 const gameStates = new Map();
@@ -352,6 +355,31 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
             console.error("Message display element not found.");
         }
     }
+
+    if (addTokensBtn && addTokensInput) {
+    addTokensBtn.addEventListener("click", () => {
+        const playerName = sessionStorage.getItem("playerName");
+        const tokensToAdd = parseInt(addTokensInput.value);
+        if (isNaN(tokensToAdd) || tokensToAdd <= 0) {
+            alert("⚠️ Please enter a valid number of tokens to add.");
+            return;
+        }
+        if (!tableId) {
+            console.error("❌ Table ID is not available.");
+            return;
+        }
+        socket.send(JSON.stringify({
+            type: "addTokens",
+            playerName: playerName,
+            tableId: tableId,
+            tokens: tokensToAdd
+        }));
+        addTokensInput.value = ""; // Clear the input
+    });
+} else {
+    console.error("❌ Add Tokens input or button not found!");
+}
+    
     socket.onmessage = function (event) {
         console.log(" 📩  Received message from WebSocket:", event.data);
         try {
