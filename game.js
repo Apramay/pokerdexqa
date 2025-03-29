@@ -311,14 +311,16 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
 
     // 🔹 Corrected SOL conversion (100 tokens = 1 SOL)
     let conversionRate = 100;  
-    let solAmount = tokensToCashOut / conversionRate;  
+    let solAmount = tokensToCashOut / conversionRate; 
+        let finalSolAmount = (solAmount - fee).toFixed(6);
+
 
     // 🔹 Corrected Fee Calculation: 1% of SOL amount
     let fee = solAmount * 0.01;  
 
     let confirmCashout = confirm(
         `🔹 You are about to cash out ${tokensToCashOut} tokens.\n` +
-        `💰 You will receive: ${SolAmount} SOL (after 1% fee: ${fee.toFixed(6)} SOL).\n\n` +
+        `💰 You will receive: ${finalSolAmount} SOL (after 1% fee: ${fee.toFixed(6)} SOL).\n\n` +
         `⚠️ After cashing out, you will remain in the game as a spectator.\n\n` +
         `Do you want to proceed?`
     );
