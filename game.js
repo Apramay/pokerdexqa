@@ -316,6 +316,15 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
     // 🔹 Corrected Fee Calculation: 1% of SOL amount
     let fee = solAmount * 0.01;  
 
+    let confirmCashout = confirm(
+        `🔹 You are about to cash out ${tokensToCashOut} tokens.\n` +
+        `💰 You will receive: ${finalSolAmount} SOL (after 1% fee: ${fee.toFixed(6)} SOL).\n\n` +
+        `⚠️ After cashing out, you will remain in the game as a spectator.\n\n` +
+        `Do you want to proceed?`
+    );
+
+    if (!confirmCashout) return;  // Cancel if user declines
+
     // 🔹 Ensure we properly refund the exact SOL amount
     mockWallet.tokenBalance = 0;
     mockWallet.solBalance = parseFloat(mockWallet.solBalance + solAmount - fee).toFixed(6);  
@@ -330,15 +339,6 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
         playerName: playerName,
         tableId: tableId
     }));
-
-    // Remove player session data
-    sessionStorage.removeItem("playerName");
-
-    // Disconnect from WebSocket and reload page
-    socket.close();
-    setTimeout(() => {
-        window.location.href = "index.html";  // Redirect or refresh
-    }, 1000);
 });
 
     const messageDisplay = document.getElementById("message");
