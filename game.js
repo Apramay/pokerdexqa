@@ -318,7 +318,7 @@ document.getElementById("cashout-btn").addEventListener("click", () => {
 
     let confirmCashout = confirm(
         `🔹 You are about to cash out ${tokensToCashOut} tokens.\n` +
-        `💰 You will receive: ${finalSolAmount} SOL (after 1% fee: ${fee.toFixed(6)} SOL).\n\n` +
+        `💰 You will receive: ${SolAmount} SOL (after 1% fee: ${fee.toFixed(6)} SOL).\n\n` +
         `⚠️ After cashing out, you will remain in the game as a spectator.\n\n` +
         `Do you want to proceed?`
     );
