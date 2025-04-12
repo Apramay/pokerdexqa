@@ -7,6 +7,8 @@ async function createTable() {
     const smallBlind = document.getElementById('smallBlind').value;
     const bigBlind = document.getElementById('bigBlind').value;
     const gameType = document.getElementById('gameType').value;
+        const hostType = document.getElementById('hostType').value;
+
 
     // Generate a unique table ID (you might want to use a more robust method)
     const tableId = Math.random().toString(36).substr(2, 8); // Generate unique table ID
@@ -20,7 +22,7 @@ const response = await fetch('https://pokerdexqa-server.onrender.com/registerTab
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind, gameType })
+            body: JSON.stringify({ tableId, solToToken, smallBlind, bigBlind, gameType, hostType })
         });
 
         if (!response.ok) {
